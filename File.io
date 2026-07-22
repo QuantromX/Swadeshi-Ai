@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
+
+<htm
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swadeshi AI | Bharatiya Awaaz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --saffron: #FF9933;
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.cs #FF9933;
             --white: #FFFFFF;
             --green: #138808;
             --navy: #000080;
@@ -23,24 +18,21 @@
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-        }
+            border-rad
 
         /* Animated Background */
-        .bg-animate {
+        .
             background: linear-gradient(-45deg, #fff5e6, #ffffff, #e6ffed);
             background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            adient 15s ease infinite;
         }
         @keyframes gradient {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            50% { background-position: 100% 5round-position: 0% 50%; }
         }
 
         /* Mic Pulse Animation */
-        .mic-shadow {
-            box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.7);
+        .mic-shadowow: 0 0 0 0 rgba(255, 153, 51, 0.7);
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
