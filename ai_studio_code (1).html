@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swadeshi AI | Bharatiya Awaaz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --green: #138808;
+            --navy: #000080;
+        }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; }
+        .indian-font { font-family: 'Marcellus', serif; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+        }
+
+        .bg-animate {
+            background: linear-gradient(-45deg, #fff5e6, #ffffff, #e6ffed);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .mic-shadow {
+            box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.7);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            70% { box-shadow: 0 0 0 20px rgba(255, 153, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0); }
+        }
+
+        .message-in { animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-animate h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Main Container -->
+    <div class="glass w-full max-w-lg h-[90vh] flex flex-col overflow-hidden shadow-2xl border-2 border-orange-100">
+        
+        <!-- Header -->
+        <header class="p-6 text-center border-b border-orange-100 relative">
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-orange-200 rounded-full"></div>
+            <h1 class="indian-font text-3xl font-bold tracking-wider text-gray-800">
+                <span class="text-[--saffron]">Swa</span>deshi <span class="text-[--green]">AI</span>
+            </h1>
+            <p class="text-[10px] text-navy font-bold uppercase tracking-[0.3em] opacity-60">Bharat Ki Apni Atmanirbhar AI</p>
+        </header>
+
+        <!-- Chat Space -->
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
+            <div class="message-in bg-white/80 p-4 rounded-2xl rounded-tl-none shadow-sm text-gray-700 border border-orange-50">
+                Namaste! 🙏 Main Swadeshi AI hoon. Main aapki kaise sahayata kar sakta hoon?
+            </div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="flex justify-center gap-2 pb-2">
+            <button onclick="setMode('Mitr')" id="btn-Mitr" class="mode-btn text-[10px] px-3 py-1 rounded-full bg-orange-500 text-white font-bold border border-orange-200">🤝 MITR</button>
+            <button onclick="setMode('Guru')" id="btn-Guru" class="mode-btn text-[10px] px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-bold border border-blue-200">🎓 GURU</button>
+            <button onclick="setMode('Kisan')" id="btn-Kisan" class="mode-btn text-[10px] px-3 py-1 rounded-full bg-green-100 text-green-700 font-bold border border-green-200">🌾 KISAN</button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-6 bg-white/50 backdrop-blur-md">
+            <div class="flex items-center gap-4 bg-white rounded-full px-5 py-2 shadow-inner border border-gray-100">
+                <button id="mic-btn" onclick="toggleMic()" class="text-orange-500 hover:scale-110 transition-transform">
+                    <i class="fas fa-microphone text-xl"></i>
+                </button>
+                
+                <input id="user-input" 
+                       type="text" 
+                       placeholder="Yahan likhein..." 
+                       class="flex-1 bg-transparent outline-none text-gray-700 text-sm py-2"
+                       onkeypress="handleKeyPress(event)">
+                
+                <button onclick="handleSend()" class="bg-orange-500 w-10 h-10 rounded-full text-white flex items-center justify-center shadow-lg hover:bg-orange-600 transition-all">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mode = "Mitr";
+        const VERCEL_URL = "YOUR_VERCEL_APP_URL/api/chat"; // Replace with your actual backend URL
+
+        // Mode switching logic
+        function setMode(newMode) {
+            mode = newMode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-500', 'bg-blue-500', 'bg-green-500', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            
+            const activeBtn = document.getElementById(`btn-${newMode}`);
+            const colorClass = newMode === 'Mitr' ? 'bg-orange-500' : newMode === 'Guru' ? 'bg-blue-500' : 'bg-green-500';
+            activeBtn.classList.remove('bg-gray-100', 'text-gray-600');
+            activeBtn.classList.add(colorClass, 'text-white');
+        }
+
+        // Handle Enter Key
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        }
+
+        // --- Voice Logic ---
+        const recognition = window.SpeechRecognition || window.webkitSpeechRecognition ? new (window.SpeechRecognition || window.webkitSpeechRecognition)() : null;
+        
+        if (recognition) {
+            recognition.lang = 'hi-IN';
+            recognition.onresult = (e) => {
+                document.getElementById('user-input').value = e.results[0][0].transcript;
+                document.getElementById('mic-btn').classList.remove('mic-shadow');
+                handleSend();
+            };
+        }
+
+        function toggleMic() {
+            if (!recognition) {
+                alert("Voice recognition not supported in this browser.");
+                return;
+            }
+            const btn = document.getElementById('mic-btn');
+            btn.classList.add('mic-shadow');
+            recognition.start();
+        }
+
+        // --- Core Send Logic ---
+        async function handleSend() {
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            try {
+                const res = await fetch(VERCEL_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ prompt: text, mode: mode })
+                });
+                const data = await res.json();
+                addMessage(data.text, 'bot');
+                speak(data.text);
+            } catch (err) {
+                addMessage("Kshama karein, server se sampark nahi ho pa raha hai.", 'bot');
+            }
+        }
+
+        function addMessage(text, sender) {
+            const box = document.getElementById('chat-box');
+            const div = document.createElement('div');
+            div.className = `message-in p-4 rounded-2xl max-w-[85%] ${sender === 'user' ? 'bg-orange-500 text-white ml-auto rounded-tr-none' : 'bg-white text-gray-700 mr-auto rounded-tl-none border border-orange-50 shadow-sm'}`;
+            div.innerHTML = `<p class="text-sm">${text}</p>`;
+            
+            box.appendChild(div);
+            box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = 'hi-IN';
+                window.speechSynthesis.speak(msg);
+            }
+        }
+    </script>
+</body>
+</html>
